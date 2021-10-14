@@ -3,13 +3,15 @@
 
 use core::panic::PanicInfo;
 
+use cpu;
+
 /// System-wide panic handler
 #[panic_handler]
 fn panic(_info: &PanicInfo) -> ! {
-    loop {}
+    cpu::hlt();
 }
 
 #[no_mangle]
 fn entry() {
-    loop {}
+    panic!();
 }
