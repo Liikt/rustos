@@ -22,7 +22,7 @@ boot:
 
     ; Enable protected mode by setting the PE (Protection Enable) bit in CR0
     mov eax, cr0 
-    or al, 1
+    or  eax, (1 << 0)
     mov cr0, eax
 
     jmp 0x18:pm_entry
