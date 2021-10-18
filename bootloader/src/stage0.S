@@ -19,6 +19,7 @@ boot:
 
     ; Load the GDT
     lgdt [ds:gdt]
+    jmp $
 
     ; Enable protected mode by setting the PE (Protection Enable) bit in CR0
     mov eax, cr0 
