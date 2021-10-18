@@ -13,6 +13,10 @@ boot:
     or al, 2
     out 0x92, al
 
+	; Clear DS
+    xor ax, ax
+    mov ds, ax
+
     ; Load the GDT
     lgdt [gdt]
 
