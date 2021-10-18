@@ -28,11 +28,17 @@ boot:
     jmp 0x0008:pm_entry
 
 [bits 32]
-pm_entry:
-    jmp $
 
-times 510-($-$$) db 0
-dw 0xaa55
+pm_entry:
+    mov ax, 0x10
+    mov es, ax
+    mov ds, ax
+    mov fs, ax
+    mov gs, ax
+    mov ss, ax
+
+    cli
+    hlt
 
 align 8
 gdt_base:
