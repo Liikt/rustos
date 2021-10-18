@@ -18,7 +18,7 @@ boot:
     mov ds, ax
 
     ; Load the GDT
-    lgdt [gdt]
+    lgdt [ds:gdt]
 
     ; Enable protected mode by setting the PE (Protection Enable) bit in CR0
     mov eax, cr0 
