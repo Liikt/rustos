@@ -1,9 +1,9 @@
 [org 0x7c00]
 [bits 16]
 
-jmp boot
+jmp _start
 
-boot:
+_start:
     ; Clear interupts and the direction flag
     cli
     cld
@@ -19,7 +19,6 @@ boot:
 
     ; Load the GDT
     lgdt [ds:gdt]
-    jmp $
 
     ; Enable protected mode by setting the PE (Protection Enable) bit in CR0
     mov eax, cr0 
@@ -38,8 +37,8 @@ pm_entry:
     mov gs, ax
     mov ss, ax
 
-    cli
-    hlt
+    extern foop
+    jmp foop
 
 align 8
 gdt_base:
@@ -51,6 +50,8 @@ gdt:
 	dw (gdt - gdt_base) - 1
 	dd gdt_base
 
-boot_end:
+_start_end:
 times 510-($-$$) db 0
 dw 0xaa55
+
+incbin "./bootloader/target/i686-unknown-linux-musl/debug/libbootloader.rlib"

@@ -1,17 +1,22 @@
-#![no_std]
 #![no_main]
+#![no_std]
+
+#![feature(rustc_private, lang_items)]
 
 use core::panic::PanicInfo;
 
-use cpu;
+#[allow(unused_imports)]
+use core_reqs;
 
 /// System-wide panic handler
 #[panic_handler]
+#[no_mangle]
 fn panic(_info: &PanicInfo) -> ! {
-    cpu::hlt();
+    loop {}
 }
 
 #[no_mangle]
-fn entry() {
+pub fn entry() -> ! {
+    let _x = 42;
     panic!();
 }
