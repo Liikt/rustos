@@ -53,5 +53,3 @@ gdt:
 _start_end:
 times 510-($-$$) db 0
 dw 0xaa55
-
-incbin "./bootloader/target/i686-unknown-linux-musl/debug/libbootloader.rlib"
