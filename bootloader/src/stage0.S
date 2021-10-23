@@ -37,8 +37,8 @@ pm_entry:
     mov gs, ax
     mov ss, ax
 
-    extern foop
-    jmp foop
+    cli
+    hlt
 
 align 8
 gdt_base:
