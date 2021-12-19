@@ -1,9 +1,12 @@
 #![no_std]
 #![no_main]
+#![feature(global_asm)]
 
 use core::panic::PanicInfo;
 
 use cpu;
+
+global_asm!(include_str!("stage0.S"));
 
 /// System-wide panic handler
 #[panic_handler]
