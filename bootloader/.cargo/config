@@ -1,5 +1,0 @@
-[build]
-target = "i586-unknown-linux-gnu"
-
-[target.i586-unknown-linux-gnu]
-rustflags = ["-C", "linker=lld-link", "-C", "link-args=/entry:boot /subsystem:native /base:0x7d00 /fixed /align:16 /debug:dwarf /nodefaultlib"]
