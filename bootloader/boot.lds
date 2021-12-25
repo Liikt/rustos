@@ -7,5 +7,9 @@ SECTIONS {
     {
         /* stage 0 */
         *(.stage0)
+
+        _rest = .;
+        *(.text .text.*)
+        *(.rodata .rodata.*)
     }
 }

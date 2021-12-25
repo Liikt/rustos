@@ -26,20 +26,29 @@ _boot:
     or  eax, (1 << 0)
     mov cr0, eax
 
+    mov sp, 0x7c00
+
     jmp pm_entry
 
 .code32
 
 pm_entry:
-    mov ax, 0x10
-    mov es, ax
-    mov ds, ax
-    mov fs, ax
-    mov gs, ax
-    mov ss, ax
+    mov bx, 0x10
+    mov es, bx
+    mov ds, bx
+    mov fs, bx
+    mov gs, bx
+    mov ss, bx
 
-    cli
-    hlt
+    push ds
+
+loop:
+    jmp loop
+
+    and al, 0xfe    # clear protected mode bit
+    mov cr0, eax
+
+    call entry
 
 .align 8
 gdt_base:
@@ -50,7 +59,3 @@ gdt_base:
 gdt:
 	.word (gdt - gdt_base) - 1
 	.long gdt_base
-
-boot_end:
-.org 510
-.word 0xaa55

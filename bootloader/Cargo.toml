@@ -7,7 +7,6 @@ edition = "2018"
 
 [dependencies]
 cpu = { path = "../cpu" }
-core_reqs = { path = "../core_reqs" }
 
 [profile.dev]
 panic = "abort"

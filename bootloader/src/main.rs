@@ -2,12 +2,12 @@
 #![no_std]
 #![feature(global_asm)]
 
+global_asm!(include_str!("stage0.S"));
+
 use core::panic::PanicInfo;
 
-#[allow(unused_imports)]
-use core_reqs;
-
-global_asm!(include_str!("stage0.S"));
+// #[allow(unused_imports)]
+// use core_reqs;
 
 /// System-wide panic handler
 #[panic_handler]
@@ -17,7 +17,11 @@ fn panic(_info: &PanicInfo) -> ! {
 }
 
 #[no_mangle]
-pub fn entry() -> ! {
-    let _x = 42;
+extern "C" fn entry() {
     panic!();
 }
+
+global_asm!(
+    ".org 510",
+    ".word 0xaa55"
+);
