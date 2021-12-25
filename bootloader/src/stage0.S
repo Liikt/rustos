@@ -5,6 +5,9 @@
 jmp _boot
 
 _boot:
+loop:
+    jmp loop
+
     # Clear interupts and the direction flag
     cli
     cld
@@ -18,6 +21,8 @@ _boot:
     xor ax, ax
     mov ds, ax
 
+    mov sp, 0x7c00
+
     # Load the GDT
     lgdt [gdt]
 
@@ -26,24 +31,12 @@ _boot:
     or  eax, (1 << 0)
     mov cr0, eax
 
-    mov sp, 0x7c00
-
     jmp pm_entry
-
-.code32
 
 pm_entry:
     mov bx, 0x10
-    mov es, bx
     mov ds, bx
-    mov fs, bx
-    mov gs, bx
-    mov ss, bx
-
-    push ds
-
-loop:
-    jmp loop
+    mov es, bx
 
     and al, 0xfe    # clear protected mode bit
     mov cr0, eax
