@@ -1,7 +1,7 @@
 use core::convert::TryInto;
 
 const X86_MACHINE: u16 = 0x03;
-const AME64_MACHINE: u16 = 0x3e;
+const AMD64_MACHINE: u16 = 0x3e;
 
 const SECTION_EXEC: u32 = 0x01;
 const SECTION_WRITE: u32 = 0x02;
@@ -22,14 +22,14 @@ impl<'a> ElfParser<'a> {
         let raw: &[u8] = raw.as_ref();
 
         // Return None if the magic bytes are missing
-        if !(raw.get(0x00..0x04) == Some(b"\x7fELF")) { return None; }
+        if raw.get(0x00..0x04) != Some(b"\x7fELF") { return None; }
 
         // Return None if the binary is big endian
-        if !(raw.get(0x05) != Some(&1)) { return None; }
+        if raw.get(0x05) != Some(&1) { return None; }
 
         let machine = 
             u16::from_le_bytes(raw.get(0x12..0x14)?.try_into().ok()?);
-        if machine != X86_MACHINE && machine != AME64_MACHINE {
+        if machine != X86_MACHINE && machine != AMD64_MACHINE {
             return None;
         }
 
@@ -42,7 +42,7 @@ impl<'a> ElfParser<'a> {
         let num_sections = if machine == X86_MACHINE {
             u16::from_le_bytes(raw.get(0x2c..0x2e)?.try_into().ok()?) as usize
         } else {
-            u64::from_le_bytes(raw.get(0x38..0x3a)?.try_into().ok()?) as usize
+            u16::from_le_bytes(raw.get(0x38..0x3a)?.try_into().ok()?) as usize
         };
 
         let phentsize = if machine == X86_MACHINE {
