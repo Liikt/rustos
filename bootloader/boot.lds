@@ -1,4 +1,4 @@
-ENTRY(_boot)
+ENTRY(entry)
 
 SECTIONS {
     . = 0x7c00;
@@ -7,8 +7,6 @@ SECTIONS {
     {
         /* stage 0 */
         *(.stage0)
-
-        _rest = .;
         *(.text .text.*)
         *(.rodata .rodata.*)
     }

@@ -1,10 +1,9 @@
-.section .stage0, "awx"
-.global _boot
-.code16
+[org 0x7c00]
+[bits 16]
 
-jmp _boot
+jmp entry
 
-_boot:
+entry:
 loop:
     jmp loop
 
@@ -21,34 +20,37 @@ loop:
     xor ax, ax
     mov ds, ax
 
-    mov sp, 0x7c00
-
     # Load the GDT
-    lgdt [gdt]
+    lgdt [ds:gdt]
 
     # Enable protected mode by setting the PE (Protection Enable) bit in CR0
     mov eax, cr0 
     or  eax, (1 << 0)
     mov cr0, eax
 
-    jmp pm_entry
+    jmp 0x08:pm_entry
+
+[bits 32]
 
 pm_entry:
-    mov bx, 0x10
-    mov ds, bx
-    mov es, bx
+    mov ax, 0x10
+    mov es, ax
+    mov ds, ax
+    mov fs, ax
+    mov gs, ax
+    mov ss, ax
 
-    and al, 0xfe    # clear protected mode bit
-    mov cr0, eax
-
-    call entry
+    call entry_point
 
 .align 8
 gdt_base:
-	.quad 0x0000000000000000 # 0x0000 | Null descriptor
-	.quad 0x00cf9a000000ffff # 0x0008 | 32-bit, present, code, base 0
-	.quad 0x00cf92000000ffff # 0x0010 | 32-bit, present, data, base 0
+	dq 0x0000000000000000 # 0x0000 | Null descriptor
+	dq 0x00cf9a000000ffff # 0x0008 | 32-bit, present, code, base 0
+	dq 0x00cf92000000ffff # 0x0010 | 32-bit, present, data, base 0
 
 gdt:
-	.word (gdt - gdt_base) - 1
-	.long gdt_base
+	dw (gdt - gdt_base) - 1
+	dd gdt_base
+
+times 510-($-$$) db 0
+dw 0xaa55
