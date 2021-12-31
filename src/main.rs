@@ -1,7 +1,7 @@
 use elf_parser::ElfParser;
 
 fn main() {
-    let file = std::fs::read("target/debug/rustos").ok().unwrap();
+    let file = std::fs::read("bootloader/target/x86-64-bootloader/debug/bootloader").ok().unwrap();
     let parser = ElfParser::parse(&file);
     if parser.is_some() {
         println!("Parsed correctly");
@@ -11,13 +11,14 @@ fn main() {
     }
     let parser = parser.unwrap();
     parser.sections(|vaddr, vsize, raw, exec, write, read| {
-        println!("Vaddr: {:x}", vaddr);
-        println!("Vsize: {:x}", vsize);
-        println!("Raw:   {:x?}", raw.get(0..10));
+        println!("Vaddr: {:#x}", vaddr);
+        println!("Vsize: {:#x}", vsize);
+        println!("Raw:   {:#x?}", raw.get(0..10));
         println!("Exec:  {}", exec);
         println!("Write: {}", write);
         println!("Read:  {}", read);
         println!("===================");
         Some(())
     });
+    println!("Entry: {:#x}", parser.entry_point);
 }
