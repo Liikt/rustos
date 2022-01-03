@@ -54,3 +54,6 @@ gdt:
 
 times 510-($-$$) db 0
 dw 0xaa55
+
+times (0x8000-0x7c00)-($-$$) db 0
+incbin "bin/boot.flat"
