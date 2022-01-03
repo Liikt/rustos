@@ -5,8 +5,6 @@ SECTIONS {
 
     .bootloader :
     {
-        /* stage 0 */
-        *(.stage0)
         *(.text .text.*)
         *(.rodata .rodata.*)
     }
