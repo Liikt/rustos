@@ -63,7 +63,7 @@ fn main() -> Result<(), Box<dyn Error>> {
         BOOTFILE, "bootloader/src/stage0.S"];
 
     // Build a debug version of the bootloader if needed
-    if std::env::args().find(|x| x == "debug").is_some() {
+    if std::env::args().any(|x| x == "debug") {
         args.push("-Ddbg");
     }
     

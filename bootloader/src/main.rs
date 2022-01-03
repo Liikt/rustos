@@ -3,8 +3,6 @@
 
 use core::panic::PanicInfo;
 
-use cpu;
-
 /// System-wide panic handler
 #[panic_handler]
 #[no_mangle]
