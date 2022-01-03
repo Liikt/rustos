@@ -2,6 +2,7 @@
 
 use core::arch::asm;
 
+/// Halt the CPU indefinitely
 #[inline]
 pub fn hlt() -> !{
     unsafe {

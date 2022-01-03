@@ -12,6 +12,7 @@ fn panic(_info: &PanicInfo) -> ! {
     loop {}
 }
 
+/// The main entry point for the rust bootloader
 #[no_mangle]
 extern fn entry() -> ! {
     cpu::hlt();

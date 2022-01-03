@@ -30,11 +30,13 @@ loop:
     or  eax, (1 << 0)
     mov cr0, eax
 
+    ; Jump into protected mode
     jmp 0x08:pm_entry
 
 [bits 32]
 
 pm_entry:
+    ; Set up the 32-bit segment registers
     mov ax, 0x10
     mov es, ax
     mov ds, ax
@@ -42,6 +44,8 @@ pm_entry:
     mov gs, ax
     mov ss, ax
 
+    ; Call into rust! `entry_point` is a macro that gets defined in the 
+    ; `main.rs` in the main src folder.
     call entry_point
 
 align 8
