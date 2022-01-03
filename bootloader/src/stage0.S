@@ -7,23 +7,23 @@ entry:
 loop:
     jmp loop
 
-    # Clear interupts and the direction flag
+    ; Clear interupts and the direction flag
     cli
     cld
 
-    # Set the A20 line
+    ; Set the A20 line
     in al, 0x92
     or al, 2
     out 0x92, al
 
-	# Clear DS
+	; Clear DS
     xor ax, ax
     mov ds, ax
 
-    # Load the GDT
+    ; Load the GDT
     lgdt [ds:gdt]
 
-    # Enable protected mode by setting the PE (Protection Enable) bit in CR0
+    ; Enable protected mode by setting the PE (Protection Enable) bit in CR0
     mov eax, cr0 
     or  eax, (1 << 0)
     mov cr0, eax
@@ -42,11 +42,11 @@ pm_entry:
 
     call entry_point
 
-.align 8
+align 8
 gdt_base:
-	dq 0x0000000000000000 # 0x0000 | Null descriptor
-	dq 0x00cf9a000000ffff # 0x0008 | 32-bit, present, code, base 0
-	dq 0x00cf92000000ffff # 0x0010 | 32-bit, present, data, base 0
+	dq 0x0000000000000000 ; 0x0000 | Null descriptor
+	dq 0x00cf9a000000ffff ; 0x0008 | 32-bit, present, code, base 0
+	dq 0x00cf92000000ffff ; 0x0010 | 32-bit, present, data, base 0
 
 gdt:
 	dw (gdt - gdt_base) - 1
