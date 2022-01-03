@@ -10,7 +10,7 @@ const SECTION_READ: u32 = 0x04;
 pub struct ElfParser<'a> {
     raw: &'a [u8],
     machine: u16,
-    image_base: u64,
+    pub image_end: u64,
     num_sections: usize,
     section_off: usize,
     section_size: u16,
@@ -58,6 +58,7 @@ impl<'a> ElfParser<'a> {
         };
 
         let mut base: u64 = !0;
+        let mut end: u64 = 0;
         for i in 0..num_sections {
             let phbase = (i*phentsize as usize)+phoff;
 
@@ -73,13 +74,23 @@ impl<'a> ElfParser<'a> {
                     phbase+0x10..phbase+0x18)?.try_into().ok()?)
             };
 
+            let pmemsize = if machine == X86_MACHINE {
+                u32::from_le_bytes(raw.get(
+                    phbase+0x14..phbase+0x18)?.try_into().ok()?) as u64
+            } else {
+                u64::from_le_bytes(raw.get(
+                    phbase+0x28..phbase+0x30)?.try_into().ok()?)
+            };
+
             base = core::cmp::min(vaddr, base);
+            end = core::cmp::max(end, vaddr.checked_add(pmemsize)?);
         }
 
         Some(ElfParser {
             raw: raw,
             machine: machine,
             image_base: base,
+            image_end: end,
             num_sections: num_sections,
             section_off: phoff,
             section_size: phentsize,
