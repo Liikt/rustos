@@ -4,8 +4,10 @@
 jmp entry
 
 entry:
+%ifdef dbg
 loop:
     jmp loop
+%endif
 
     ; Clear interupts and the direction flag
     cli

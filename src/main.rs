@@ -49,9 +49,15 @@ fn main() -> Result<(), Box<dyn Error>> {
 
     std::fs::write("bin/boot.flat", flat)?;
 
-    if !Command::new("nasm")
-            .args(&["-f", "bin", &format!("-Dentry_point={:#x}", entry), "-o",
-            BOOTFILE, "bootloader/src/stage0.S"]).status()?.success() {
+    let m = format!("-Dentry_point={:#x}", entry);
+    let mut args = vec!["-f", "bin", &m, "-o",
+        BOOTFILE, "bootloader/src/stage0.S"];
+
+    if std::env::args().find(|x| x == "debug").is_some() {
+        args.push("-Ddbg");
+    }
+
+    if !Command::new("nasm").args(args).status()?.success() {
         panic!("Couldn't assemble stage0");
     }
 
