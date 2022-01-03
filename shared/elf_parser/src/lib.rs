@@ -100,7 +100,7 @@ impl<'a> ElfParser<'a> {
     }
 
     pub fn sections<F>(&self, mut func: F) -> Option<()>
-            where F: FnMut(u64, u64, &[u8], bool, bool, bool) -> Option<()> {
+            where F: FnMut(u64, u64, u32, &[u8], bool, bool, bool) -> Option<()> {
         let raw = self.raw;
 
         for section in 0..self.num_sections {
@@ -121,6 +121,9 @@ impl<'a> ElfParser<'a> {
                 u64::from_le_bytes(raw.get(
                     base+0x28..base+0x30)?.try_into().ok()?)
             };
+
+            let ptype = u32::from_le_bytes(raw.get(base..base+0x4)?
+                .try_into().ok()?);
 
             let roff = if self.machine == X86_MACHINE {
                 u32::from_le_bytes(raw.get(
@@ -150,6 +153,7 @@ impl<'a> ElfParser<'a> {
             func(
                 self.image_base.checked_add(vaddr)?,
                 vsize,
+                ptype,
                 raw.get(roff..roff.checked_add(rsize.try_into().ok()?)?)?,
                 flags & SECTION_EXEC  != 0,
                 flags & SECTION_WRITE != 0,
