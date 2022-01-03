@@ -151,7 +151,7 @@ impl<'a> ElfParser<'a> {
             };
 
             func(
-                self.image_base.checked_add(vaddr)?,
+                self.image_base.checked_add(vaddr.checked_sub(self.image_base).map_or(0, |x| x))?,
                 vsize,
                 ptype,
                 raw.get(roff..roff.checked_add(rsize.try_into().ok()?)?)?,
