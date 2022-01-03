@@ -3,6 +3,8 @@
 
 use core::panic::PanicInfo;
 
+use cpu;
+
 /// System-wide panic handler
 #[panic_handler]
 #[no_mangle]
@@ -12,5 +14,5 @@ fn panic(_info: &PanicInfo) -> ! {
 
 #[no_mangle]
 extern fn entry() -> ! {
-    panic!();
+    cpu::hlt();
 }
