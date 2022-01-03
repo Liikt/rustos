@@ -10,6 +10,7 @@ const SECTION_READ: u32 = 0x04;
 pub struct ElfParser<'a> {
     raw: &'a [u8],
     machine: u16,
+    pub image_base: u64,
     pub image_end: u64,
     num_sections: usize,
     section_off: usize,
