@@ -79,7 +79,7 @@ fn main() -> Result<(), Box<dyn Error>> {
     assert!(md.len() <= (32 * 1024));
 
     // Print the size of the bootloader
-    println!("Bootloader size is {} bytes ({:8.4}%)",
+    println!("[+] Bootloader size is {} bytes ({:8.4}%)",
         md.len(), md.len() as f64 / (32. * 1024.) * 1024.);
 
     // Deploy the bootloader to the tftp folder
