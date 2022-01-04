@@ -29,10 +29,10 @@ pub struct ElfParser<'a> {
     /// The end virtual address of the elf
     pub image_end: u64,
 
-    // The number of physical sections
+    // The number of program sections
     num_sections: usize,
 
-    // The offset of the physical section headers in the elf
+    // The offset of the program section headers in the elf
     section_off: usize,
 
     // The size of the section headers
@@ -69,7 +69,7 @@ impl<'a> ElfParser<'a> {
             u64::from_le_bytes(raw.get(0x18..0x20)?.try_into().ok()?)
         };
 
-        // Get the number of physical headers
+        // Get the number of program headers
         let num_sections = if machine == X86_MACHINE {
             u16::from_le_bytes(raw.get(0x2c..0x2e)?.try_into()
                 .ok()?) as usize
@@ -78,14 +78,14 @@ impl<'a> ElfParser<'a> {
                 .ok()?) as usize
         };
 
-        // Get the size of a physical header
+        // Get the size of a program header
         let phentsize = if machine == X86_MACHINE {
             u16::from_le_bytes(raw.get(0x2a..0x2c)?.try_into().ok()?)
         } else {
             u16::from_le_bytes(raw.get(0x36..0x38)?.try_into().ok()?)
         };
 
-        // Get the offset to the physical headers
+        // Get the offset to the program headers
         let phoff = if machine == X86_MACHINE {
             u32::from_le_bytes(raw.get(0x1c..0x20)?.try_into()
                 .ok()?) as usize
@@ -153,7 +153,7 @@ impl<'a> ElfParser<'a> {
         for section in 0..self.num_sections {
             let base = self.section_off + section*self.section_size as usize;
 
-            // Get the virtual bas address of the section
+            // Get the virtual base address of the section
             let vaddr = if self.machine == X86_MACHINE {
                 u32::from_le_bytes(raw.get(
                     base+0x08..base+0x0c)?.try_into().ok()?) as u64
