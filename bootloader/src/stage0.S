@@ -44,8 +44,9 @@ pm_entry:
     mov gs, ax
     mov ss, ax
 
-    ; Call into rust! `entry_point` is a macro that gets defined in the 
-    ; `main.rs` in the main src folder.
+    ; Call into rust!
+    ; `entry_point` is a macro that gets defined in the `main.rs` in the main
+    ; src folder.
     call entry_point
 
 align 8
